@@ -1,73 +1,47 @@
-//Основные типы данных
-
-//Категории товаров
-type CategoryType = 'софт-скил' | 'другое' | 'дополнительное' | 'кнопка' | 'хард-скил'; 
-
-//Тип, описывающий ошибки валидации форм
-type FormErrors = Partial<Record<keyof IOrderForm, string>>;
-
-//Основные интерфейсы
-
-//Интерфейс состояния главной страницы приложения
-export interface IPage {
-    counter: number;
-    store: HTMLElement[];
+// интерфейс товара
+export interface IProductItem {
+  id: string;
+  description: string;
+  image: string;
+  title: string;
+  category: string;
+  price: number | null;
 }
 
-//Карточка товара в магазине
-export interface IProduct {
-    id: string;
-    category: CategoryType;
-    title: string;
-    description: string;
-    image: string;
-    price: number | null;
-}
-
-// Интерфейс, описывающий карточку товара
-interface ICard extends IProduct {
-    selected: boolean;
-  }
-
-//Интерфейс для корзины, элемент корзины и затем сама корзина со списком элементов
-export interface IBasketItem {
-    productId: string;
-    quantity: number;
-}
-  export interface IBasket {
-    items: IBasketItem[];
-    totalPrice: number;
-}
-
-// Интерфейс, описывающий окошко заказа товара
-export interface IOrder {
-address: string;
-payment: string;
-}
-
-// Интерфейс, описывающий окошко контакты
-export interface IContacts {
-phone: string;
-email: string;
-}
-
-//Форма для заказа
+// интерфейс формы заказа
 export interface IOrderForm {
-    payment?: string;
-    address?: string;
-    phone?: string;
-    email?: string;
-    total?: number;
-    items?: string[];
+payment?: string;
+address?: string;
+phone?: string;
+email?: string;
+total?: string | number;
 }
 
-//Массив товаров
-export interface IProductItems {
-    items: IProduct[]
+// интерфейс заказа пользователя
+export interface IOrderLot{
+  payment: string;
+  address: string;
+  email: string;
+  phone: string;
+  total: number;
+  items: string[];
 }
 
-//Список товаров в заказе
-export interface IOrderList {
-	total: number;
-	items: string[];
+// интерфейс ответа от сервера по заказу
+export interface IOrderResult {
+  id: string;
+  total: number;
+}
+
+// интерфейс заказа для отображения ошибок 
+export interface IOrder extends IOrderForm {
+  items: string[];
+}
+
+// тип ошибки формы
+export type FormErrors = Partial<Record<keyof IOrder, string>>;
+
+// интерфейс для передачи обработчика к событию
+export interface IActions {
+  onClick: (event: MouseEvent) => void;
 }
