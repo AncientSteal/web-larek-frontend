@@ -1,0 +1,60 @@
+import { IEvents } from "../base/events";
+
+// интерфейс для модального окна
+export interface IModal {
+  open(): void;
+  close(): void;
+  render(): HTMLElement
+}
+
+export class Modal implements IModal {
+  protected modalContainer: HTMLElement;
+  protected closeButton: HTMLButtonElement;
+  protected _content: HTMLElement;
+  protected _pageWrapper: HTMLElement;
+  
+  constructor(modalContainer: HTMLElement, protected events: IEvents) {
+    this.modalContainer = modalContainer;
+    this.closeButton = modalContainer.querySelector('.modal__close');
+    this._content = modalContainer.querySelector('.modal__content');
+    this._pageWrapper = document.querySelector('.page__wrapper');
+  // привяжем обработчики для закрытия на текущий экземпляр модального окна
+    this.closeButton.addEventListener('click', this.close.bind(this));
+    this.modalContainer.addEventListener('click', this.close.bind(this));
+  // запретим событию клика распространяться дальше на другие элементы (чтобы окно не закрылось сразу)
+    this.modalContainer.querySelector('.modal__container').addEventListener('click', event => event.stopPropagation());
+  }
+
+  // заменяем элемент разметки в модальном окне
+  set content(value: HTMLElement) {
+    this._content.replaceChildren(value);
+  }
+
+  // открытие модального окна
+  open() {
+    this.modalContainer.classList.add('modal_active');
+    this.events.emit('modal:open');
+  }
+
+  // закрытие модального окна
+  close() {
+    this.modalContainer.classList.remove('modal_active');
+    this.content = null;
+    this.events.emit('modal:close');
+  }
+
+  // управление прокурткой страницы
+  set locked(value: boolean) {
+    if (value) {
+      this._pageWrapper.classList.add('page__wrapper_locked');
+    } else {
+      this._pageWrapper.classList.remove('page__wrapper_locked');
+    }
+  }
+
+  // откроем модальное окно и вернём его
+  render(): HTMLElement {
+    this.open();
+    return this.modalContainer;
+  }
+}
