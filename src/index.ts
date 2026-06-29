@@ -49,8 +49,13 @@ apiModel.getListProductCard()
   // когда ответ пришёл перезаписываем данные о карточках, тем самым вызывая сеттер
   // сеттер вызовет событие productCards:receive
     dataModel.productCards = data;
+  });
+
+  apiModel.getListProductCard()
+  .then(function (data) {
+    dataModel.productCards = data;
   })
-  .catch(error => console.log(error))
+  .catch (error => console.log(error, "карточки не загружены"));
 
 // получить объект данных "IProductItem" карточки по которой кликнули
 events.on('card:select', (item: IProductItem) => { dataModel.setPreview(item) });
